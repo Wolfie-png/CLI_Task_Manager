@@ -17,7 +17,7 @@ def get_task_id(Tasks):
     return id
         
         
-def addTask():
+def addTask(Tasks):
     name = input("Task title: ")
     if (name.strip() == ""):
         print("Empty name not allowed")
@@ -27,26 +27,32 @@ def addTask():
     print("\n Task added successfully")
     
     
-def viewTask():
-    for index, task in enumerate(Tasks):
+def viewTask(tasks):
+    if not tasks:
+        print("No tasks found")
+        return
+    
+    for index, task in enumerate(tasks):
         status = 'x' if task.status == True else " "
         print(f"[{index + 1}] [{status}] {task.name}")
-def completeTask():
-    id = get_task_id(Tasks) 
+def completeTask(tasks):
+    id = get_task_id(tasks) 
     
     if (isinstance(id , int)):
     
-        Tasks[id - 1].status = True
+        tasks[id - 1].status = True
     
-def deleteTask():
-    id = get_task_id(Tasks) 
+def deleteTask(tasks):
+    id = get_task_id(tasks) 
     
     if(isinstance(id , int)):
-        Tasks.remove(Tasks[id - 1])
+        tasks.remove(tasks[id - 1])
     
 
-Tasks = []
+
 def main():
+    
+    Tasks = []
     
     
     
@@ -68,13 +74,13 @@ def main():
    
         match choice:
             case 1:
-                addTask()
+                addTask(Tasks)
             case 2:
-                viewTask()
+                viewTask(Tasks)
             case 3:
-                completeTask()
+                completeTask(Tasks)
             case 4:
-                deleteTask()
+                deleteTask(Tasks)
             case 5:
                 return 0
         
