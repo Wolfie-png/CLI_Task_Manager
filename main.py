@@ -5,48 +5,58 @@ class Task:
         self.status = False
     
 
-def get_task_id(Tasks):
+def get_task_id(Tasks, raw_id):
     try:
-        id = int(input("Task ID: "))
+        id = int(raw_id)
     except ValueError:
-        print("invalid task ID")
-        return 
+        
+        return None
     if id <= 0 or id > len(Tasks):
-        print("Invalid task ID")
-        return  
+        
+        return  None
     return id
         
         
-def addTask(Tasks):
-    name = input("Task title: ")
+def addTask(Tasks, name):
+    
     if (name.strip() == ""):
-        print("Empty name not allowed")
-        return
+        return False
     task = Task(name)
     Tasks.append(task)
-    print("\n Task added successfully")
+    return True
     
     
 def viewTask(tasks):
     if not tasks:
-        print("No tasks found")
-        return
+        return "No tasks found"
     
+    task_names = ""
     for index, task in enumerate(tasks):
         status = 'x' if task.status == True else " "
-        print(f"[{index + 1}] [{status}] {task.name}")
-def completeTask(tasks):
-    id = get_task_id(tasks) 
+        to_join = f"[{index + 1}] [{status}] {task.name} \n"
+        task_names += to_join
+        
+    return task_names
+        
+def completeTask(tasks, id):
     
-    if (isinstance(id , int)):
     
-        tasks[id - 1].status = True
+    if (type(id) is int):
+        
+        if( id >0 and id <= len(tasks)):
     
-def deleteTask(tasks):
-    id = get_task_id(tasks) 
+            tasks[id - 1].status = True
+            return True
+    return False
     
-    if(isinstance(id , int)):
-        tasks.remove(tasks[id - 1])
+def deleteTask(tasks, id):
+     
+    
+    if(type(id) is int):
+        if( id >0 and id <= len(tasks)):
+            tasks.remove(tasks[id - 1])
+            return True
+    return False
     
 
 
@@ -74,13 +84,25 @@ def main():
    
         match choice:
             case 1:
-                addTask(Tasks)
+                name = input("Task title: ")
+                print("Task added successfully" if addTask(Tasks, name) else "Empty name not allowed")
             case 2:
-                viewTask(Tasks)
+                print(viewTask(Tasks))
             case 3:
-                completeTask(Tasks)
+                raw_id = input("Enter task id: ")
+                id = get_task_id(Tasks, raw_id) 
+                
+                if completeTask(Tasks, id):
+                    print('Task Completed successfully')
+                else:
+                    print('Invalid ID')
             case 4:
-                deleteTask(Tasks)
+                raw_id = input("Enter task id: ")
+                id = get_task_id(Tasks, raw_id)
+                if deleteTask(Tasks, id):
+                    print("Task deleted successfully")
+                else:
+                    print("Invalid ID")
             case 5:
                 return 0
         
